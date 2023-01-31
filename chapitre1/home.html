@@ -11,35 +11,45 @@
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/865258096d.js" crossorigin="anonymous"></script>
     <!-- css -->
-    <link rel="stylesheet" href="./assets/css/style.css">
-    <title>Post</title>
+    <!-- <link rel="stylesheet" href="./assets/css/style.css"> -->
+    <title>Home</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary ">
-        <a class="navbar-brand m-2">M152 - Blog</a>
-
-        <div class="collapse navbar-collapse" style="justify-content: center" >
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link text-white" href="./home.html"><i class="fa-solid fa-house"></i> Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="./post.html"><i class="fa-solid fa-plus"></i> Post</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link text-white" href=""><i class="fa-solid fa-user"></i></a>
-                </li>
-            </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a href="#" class="navbar-brand">M152 - Blog</a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse1">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse1">
+                <div class="navbar-nav">
+                    
+                </div>
+                <div class="d-flex ms-auto">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link text-white" href="./home.html"><i class="fa-solid fa-house"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="./post.html"><i class="fa-solid fa-plus"></i> Post</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link text-white" href=""><i class="fa-solid fa-user"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </nav>
+    
     <div class="container d-flex h-100">
         <div class="row align-self-center">
             <div class="full col-sm-9">
                 <div class="row">
-                    <!-- main col left -->
+                    <!-- colonne gauche -->
                     <div class="col-sm-5">
-                        <div class="card" >
+                        <div class="card mt-2">
                             <img src="https://a.travel-assets.com/findyours-php/viewfinder/images/res70/475000/475457-Los-Angeles.jpg"
                                 class="card-img-top img-responsive" alt="los angeles">
                             <div class="card-body">
@@ -47,12 +57,13 @@
                                 <p>45 Followers, 13 Posts</p>
 
                                 <p>
-                                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" height="28px" width="28px">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" height="28px"
+                                        width="28px">
                                 </p>
                             </div>
                         </div>
 
-                        <div class="card">
+                        <div class="card mt-2">
                             <div class="card-header"><a href="#" class="float-end">View all</a>
                                 <h4>Bootstrap Examples</h4>
                             </div>
@@ -65,11 +76,12 @@
                             </div>
                         </div>
                     </div>
+                    <!-- colonne droite -->
                     <div class="col-sm-7">
-
-                        <h1 id="msgBienvenue">Welcome</h1>
+                        <h1 class="text-center" id="msgBienvenue">Welcome</h1>
                         <div class="card" id="cardPublication">
-                            <img src="https://d32ijn7u0aqfv4.cloudfront.net/wp/wp-content/uploads/raw/young-woman-walking-down-palm-trees-street-revealing-downtown-los-picture-id1143355576-1.jpg" class="card-img-top img-responsive" alt="los angeles">
+                            <img src="https://d32ijn7u0aqfv4.cloudfront.net/wp/wp-content/uploads/raw/young-woman-walking-down-palm-trees-street-revealing-downtown-los-picture-id1143355576-1.jpg"
+                                class="card-img-top img-responsive" alt="los angeles">
                             <div class="card-body">
                                 <h5 class="card-title">Social Good</h5>
                                 <p>1,200 Followers, 83 Posts</p>
