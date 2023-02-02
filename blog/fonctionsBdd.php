@@ -31,12 +31,22 @@ function getConnexion()
     return $myDb;
 }
 
-function newPost($typeMedia, $nameMedia, $image)
+function newMedia($typeMedia, $nameMedia)
 {
     $query = getConnexion()->prepare("
-            INSERT INTO `media`(`typeMedia`, `nomMedia`, `creationDate`, `image`) 
+            INSERT INTO `media`(`typeMedia`, `nomMedia`, `creationDate) 
             VALUES (?, ?, DATE(NOW()), ?);
         ");
-    $query->execute([$typeMedia, $nameMedia, $image]);
+    $query->execute([$typeMedia, $nameMedia]);
+
+}
+
+function newPost($comment,$modificationDate)
+{
+    $query = getConnexion()->prepare("
+            INSERT INTO `post`(`commentaire`, `creationDate`, `modificationDate`) 
+            VALUES (?, DATE(NOW()),?);
+        ");
+    $query->execute([$comment,$modificationDate]);
 
 }

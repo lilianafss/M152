@@ -35,10 +35,10 @@
                 <div class="d-flex ms-auto">
                     <ul class="navbar-nav">
                         <li class="nav-item active">
-                            <a class="nav-link text-white" href="./home.html"><i class="fa-solid fa-house"></i> Home</a>
+                            <a class="nav-link text-white" href="./index.php"><i class="fa-solid fa-house"></i> Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="./post.html"><i class="fa-solid fa-plus"></i> Post</a>
+                            <a class="nav-link text-white" href="./post.php"><i class="fa-solid fa-plus"></i> Post</a>
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link text-white" href=""><i class="fa-solid fa-user"></i></a>
