@@ -4,7 +4,25 @@
     Date: 26.01.2023
     Description : Faire une publication sur le blog
 -->
+<?php
 
+require("./fonctionsBdd");
+$submit = filter_input(INPUT_POST, 'publier', FILTER_SANITIZE_SPECIAL_CHARS);
+
+if ($submit == "Publier") {
+
+    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
+    $imageName = $_FILES['fichier[]']['name'];
+    $imageType = $_FILES['fichier[]']['type'];
+    $image = $_FILES['fichier[]']['tmp_name'];
+
+    if ($description != "" && $image != "") {
+        $img = file_get_contents($image);
+
+        newPost($imageName, $imageType, $img);
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -31,7 +49,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse1">
                 <div class="navbar-nav">
-                    
+
                 </div>
                 <div class="d-flex ms-auto">
                     <ul class="navbar-nav">
@@ -39,7 +57,7 @@
                             <a class="nav-link text-white" href="./home.html"><i class="fa-solid fa-house"></i> Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="./post.html"><i class="fa-solid fa-plus"></i> Post</a>
+                            <a class="nav-link text-white" href="./post.php"><i class="fa-solid fa-plus"></i> Post</a>
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link text-white" href=""><i class="fa-solid fa-user"></i></a>
@@ -50,7 +68,21 @@
         </div>
     </nav>
 
-    <h1>Page Post</h1>
+    <div class="card-footer py-3 border-0 m-5 " style="width: 50%;">
+        <form action="#" method="post" enctype="multipart/form-data">
+            <div class="form-outline w-100">
+                <textarea class="form-control" id="textAreaExample" placeholder="Message" rows="5"
+                    name="description"></textarea>
+            </div>
+            <div class="float-start mt-2 pt-1">
+                <input type="file" name="fichier[]" id="fichier" accept="image/*" multiple>
+            </div>
+            <div class="float-end mt-2 pt-1">
+                <input type="submit" value="Publier" name="publier" class="btn btn-primary btn-sm">
+            </div>
+        </form>
+    </div>
+
 </body>
 
 </html>
