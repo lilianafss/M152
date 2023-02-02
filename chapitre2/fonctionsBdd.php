@@ -1,3 +1,9 @@
+<!-- 
+    Projet: Blog
+    Auteur : Liliana Santos
+    Date: 26.01.2023
+    Description : Fonctions pour recuperer les données de la base de données 
+ -->
 <?php
 
 require_once "./constantes.php";

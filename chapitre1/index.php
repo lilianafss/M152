@@ -1,5 +1,11 @@
+<!-- 
+    Projet: Blog
+    Auteur : Liliana Santos
+    Date: 26.01.2023
+    Description : Page inicial du blog
+ -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -32,7 +38,7 @@
                             <a class="nav-link text-white" href="./home.html"><i class="fa-solid fa-house"></i> Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="./post.php"><i class="fa-solid fa-plus"></i> Post</a>
+                            <a class="nav-link text-white" href="./post.html"><i class="fa-solid fa-plus"></i> Post</a>
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link text-white" href=""><i class="fa-solid fa-user"></i></a>

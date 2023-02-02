@@ -1,3 +1,9 @@
+<!-- 
+    Projet: Blog
+    Auteur : Liliana Santos
+    Date: 26.01.2023
+    Description : Faire une publication sur le blog
+-->
 <?php
 
 require("./fonctionsBdd");
@@ -18,7 +24,7 @@ if ($submit == "Publier") {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
