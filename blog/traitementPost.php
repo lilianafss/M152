@@ -11,6 +11,7 @@ require("fonctionsBdd.php");
 $submit = filter_input(INPUT_POST, 'publier');
 $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
 
+//tailles fichiers
 $totalFilesSize = 0;
 $maxFileSize = 3 * 1024 * 1024;
 $allFilesSize = 70 * 1024 * 1024;
