@@ -18,7 +18,7 @@
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/865258096d.js" crossorigin="anonymous"></script>
     <!-- css -->
-    <!-- <link rel="stylesheet" href="./assets/css/style.css"> -->
+    <link rel="stylesheet" href="./assets/css/style.css"> 
     <title>Post</title>
 </head>
 
@@ -50,19 +50,26 @@
         </div>
     </nav>
 
-    <div class="card-footer py-3 border-0 m-5 " style="width: 50%;">
-        <form action="./traitementPost.php" method="post" enctype="multipart/form-data">
-            <div class="form-outline w-100">
-                <textarea class="form-control" id="textAreaExample" placeholder="Message" rows="5"
-                    name="description"></textarea>
-            </div>
-            <div class="float-start mt-2 pt-1">
-                <input type="file" name="file[]" id="file" accept="image/*" multiple>
-            </div>
-            <div class="float-end mt-2 pt-1">
-                <input type="submit" value="Publier" name="publier" class="btn btn-primary btn-sm">
-            </div>
-        </form>
+    <div class="container mt-5 align-items-center">
+
+        <div class="row align-items-center">
+
+            <form action="./traitementPost.php" method="post" enctype="multipart/form-data">
+                <div class="form-outline w-75">
+                    <label for="textAreaLabel" class="form-label">Description du post :</label>
+                    <textarea class="form-control" id="textArea" placeholder="Message" rows="8"
+                        name="description"></textarea>
+                </div>
+                <div class="form-outline w-75 mt-2 pt-1">
+                    <label for="textAreaLabel" class="form-label">Sélectionner un ou plusieurs fichiers :</label>
+                    <input type="file" class="form-control" name="file[]" id="file" accept="image/*" multiple>
+                </div>
+                <div class="d-grid col-6 w-75 mt-2 pt-1">
+                    <input type="submit" value="Publier" name="publier" class="btn btn-primary p-2">
+                </div>
+            </form>
+        </div>
+
     </div>
    
 </body>

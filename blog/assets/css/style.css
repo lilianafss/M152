@@ -1,18 +1,3 @@
-#msgBienvenue {
-    margin-left: 30%;
-    margin-top: 5%;
-    text-align: center;
-    width: 100%;
-}
-
-#cardPublication {
-    width: 40rem;
-    height: auto;
-    margin-left: 30%;
-}
-
-.card {
-    width: 24rem;
-    height: auto;
-    margin-top: 10%;
+textarea{
+    resize: none;
 }

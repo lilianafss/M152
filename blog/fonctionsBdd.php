@@ -8,6 +8,9 @@
 
 require_once "./constantes.php";
 
+/**
+ * Il crée une connexion à une base de données MySQL 
+ */
 function getConnexion()
 {
     static $myDb = null;
@@ -31,22 +34,34 @@ function getConnexion()
     return $myDb;
 }
 
-function newMedia($typeMedia, $nameMedia)
+/**
+ * Il crée un nouveau média dans la base de données.
+ */
+function newMedia($typeMedia, $nameMedia, $idPost)
 {
+    $today = date("Y-m-d H:i:s");
     $query = getConnexion()->prepare("
-            INSERT INTO `media`(`typeMedia`, `nomMedia`, `creationDate) 
-            VALUES (?, ?, DATE(NOW()), ?);
+            INSERT INTO `media`(`typeMedia`, `nomMedia`, `creationDate`,`idPost`) 
+            VALUES (?,?,?,?)
         ");
-    $query->execute([$typeMedia, $nameMedia]);
+    $query->execute([$typeMedia, $nameMedia,$today,$idPost]);
 
 }
 
-function newPost($comment,$modificationDate)
+
+/**
+ * Il insère un nouveau message dans la base de données et renvoie l'identifiant du nouveau message
+ */
+function newPost($comment)
 {
-    $query = getConnexion()->prepare("
+    $today = date("Y-m-d H:i:s");
+    
+    $myDb = getConnexion();
+    $query = $myDb->prepare("
             INSERT INTO `post`(`commentaire`, `creationDate`, `modificationDate`) 
-            VALUES (?, DATE(NOW()),?);
+            VALUES (?,?,?)
         ");
-    $query->execute([$comment,$modificationDate]);
+    $query->execute([$comment,$today,$today]);
+    return $myDb->lastInsertId();
 
 }
