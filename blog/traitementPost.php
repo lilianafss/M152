@@ -19,16 +19,16 @@ $allFilesSize = 70 * 1024 * 1024;
 $imageType = array('jpg', 'png', 'jpeg', 'gif');
 $folder = "/var/www/html/M152/blog/uploads/";
 
-$idPost = newPost($description);
+
 $error = "";
 
 if ($submit == "Publier") {
-    
-   /* Filtrage du nom du fichier. */
-    $nameFile = array_filter($_FILES['file']['name']);
+    $idPost = newPost($description);
+    /* Filtrage du nom du fichier. */
+    $nameFiles = array_filter($_FILES['file']['name']);
 
     /* Il vérifie si le fichier est vide. */
-    if (!empty($nameFile)) {
+    if (!empty($nameFiles)) {
 
         /* Calcul de la taille totale de tous les fichiers. */
         for ($i = 0; $i < count($_FILES['file']['name']); $i++) {
@@ -39,13 +39,13 @@ if ($submit == "Publier") {
         /* Vérifier si la taille totale de tous les fichiers est inférieure à la taille maximale */
         if ($totalFilesSize <= $allFilesSize) {
 
-            foreach ($nameFile as $key => $val) {
-
+            foreach ($nameFiles as $key => $val) {
+                $file = $_FILES['file'];
                 /* Vérifier si la taille du fichier est inférieure à la taille maximale du fichier. */
                 if ($file['size'][$key] <= $maxFileSize) {
 
-                   /* Obtenir le nom du fichier. */
-                    $nameFile = basename($nameFile[$key]);
+                    /* Obtenir le nom du fichier. */
+                    $nameFile = basename($nameFiles[$key]);
 
                     /* Obtenir l'extension du fichier. */
                     $typeOfFile = pathinfo($nameFile, PATHINFO_EXTENSION);
@@ -57,13 +57,17 @@ if ($submit == "Publier") {
                         $singleFileName = $fileName['filename'] . '_' . uniqid() . '.' . $fileName['extension'];
 
                         $filePath = $folder . $singleFileName;
-                        
+
+                        /* Déplacer le fichier de l'emplacement temporaire vers le chemin du fichier. */
                         if (move_uploaded_file($_FILES["file"]["tmp_name"][$key], $filePath)) {
-                            newMedia($typeOfFile, $singleFileName, $idPost);
+                            if (file_exists($filePath)) {
+                                newMedia($typeOfFile, $singleFileName, $idPost);
+                                header('Location: ./index.php');
+                            }
                         }
                     }
                 } else {
-                    echo "trop grand";
+                    echo "L'image est trop grand";
                 }
             }
         }

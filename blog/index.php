@@ -4,6 +4,11 @@
     Date: 26.01.2023
     Description : Page inicial du blog
  -->
+<?php
+require("./fonctionsBdd.php");
+$publish = displayPost();
+$folder = "./uploads/";
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -30,7 +35,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse1">
                 <div class="navbar-nav">
-                    
+
                 </div>
                 <div class="d-flex ms-auto">
                     <ul class="navbar-nav">
@@ -48,7 +53,7 @@
             </div>
         </div>
     </nav>
-    
+
     <div class="container d-flex h-100">
         <div class="row align-self-center">
             <div class="full col-sm-9">
@@ -85,20 +90,54 @@
                     <!-- colonne droite -->
                     <div class="col-sm-7">
                         <h1 class="text-center" id="msgBienvenue">Welcome</h1>
-                        <div class="card" id="cardPublication">
-                            <img src="https://d32ijn7u0aqfv4.cloudfront.net/wp/wp-content/uploads/raw/young-woman-walking-down-palm-trees-street-revealing-downtown-los-picture-id1143355576-1.jpg"
-                                class="card-img-top img-responsive" alt="los angeles">
-                            <div class="card-body">
-                                <h5 class="card-title">Social Good</h5>
-                                <p>1,200 Followers, 83 Posts</p>
 
-                                <p>
-                                    <img src="assets/images/photo.jpg" height="28px" width="28px">
-                                    <img src="assets/images/photo.png" height="28px" width="28px">
-                                    <img src="assets/images/photo_002.jpg" height="28px" width="28px">
-                                </p>
-                            </div>
-                        </div>
+                        <!-- C'est une boucle qui affichera tous les post. -->
+                        <?php foreach ($publish as $key => $value) {
+                            /* Cette fonction compte le nombre de médias dans la base de données. */
+                            $countMedia = countMedia($value['idPost']);
+                            /* Cette fonction sélectionne tous les médias de la base de données. */
+                            $selectMedia = selectMedia($value['idPost']);
+
+                            /* Si le nombre de médias est supérieur ou égal à 2. */
+                            if ($countMedia >= 2) { ?>
+                                <div class="card mb-3" id="cardPublication">
+                                    <?php /* Boucle qui affichera tous les médias. */
+                                    foreach ($selectMedia as $media) { ?>
+                                        <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive">
+                                    <?php } ?>
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <?php echo $value["commentaire"] ?>
+                                        </h5>
+                                        <p>1,200 Followers, 83 Posts</p>
+                                        <div class="float-end">
+                                            <i class="fa-regular fa-pen-to-square p-2"></i>
+                                            <i class="fa-solid fa-trash p-2"></i>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            <?php
+                                /* Il vérifie si le nombre de médias est égal à 1. */
+                            } else if ($countMedia = 1) {
+                                ?>
+                                    <div class="card mb-3" id="cardPublication">
+                                        <img src="<?php echo $folder . $selectMedia[0]["nomMedia"] ?>"
+                                            class="card-img-top img-responsive">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                            <?php echo $value["commentaire"] ?>
+                                            </h5>
+                                            <p>1,200 Followers, 83 Posts</p>
+                                            <div class="float-end">
+                                                <i class="fa-regular fa-pen-to-square p-2"></i>
+                                                <i class="fa-solid fa-trash p-2"></i>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                            <?php }
+                        } ?>
                     </div>
                 </div>
             </div>
