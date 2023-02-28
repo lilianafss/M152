@@ -4,6 +4,11 @@
     Date: 26.01.2023
     Description : Faire une publication sur le blog
 -->
+<?php
+session_start();
+$errorMessage = "";
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -17,7 +22,7 @@
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/865258096d.js" crossorigin="anonymous"></script>
     <!-- css -->
-    <link rel="stylesheet" href="./assets/css/style.css"> 
+    <link rel="stylesheet" href="./assets/css/style.css">
     <title>Post</title>
 </head>
 
@@ -61,16 +66,33 @@
                 </div>
                 <div class="form-outline w-75 mt-2 pt-1">
                     <label for="textAreaLabel" class="form-label">Sélectionner un ou plusieurs fichiers :</label>
-                    <input type="file" class="form-control" name="file[]" id="file" accept="image/jpg, image/png, image/jpeg, image/gif" multiple>
+                    <input type="file" class="form-control" name="file[]" id="file"
+                        accept="image/jpg, image/png, image/jpeg, image/gif" multiple>
                 </div>
                 <div class="d-grid col-6 w-75 mt-2 pt-1">
                     <input type="submit" value="Publier" name="publier" class="btn btn-primary p-2">
                 </div>
             </form>
+
         </div>
 
+
+        <div>
+            <?php
+            if (isset($_REQUEST['error'])) {
+                $errorMessage = $_REQUEST['error'];
+                if ($errorMessage != 0) { ?>
+                    <div class="alert alert-danger w-75 mt-3" role="alert">
+                        <?php foreach ($errorMessage as $key) {
+                            echo $key;
+                        } ?>
+                    </div>
+                <?php }
+            } ?>
+
+        </div>
     </div>
- 
+
 </body>
 
 </html>

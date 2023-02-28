@@ -7,7 +7,6 @@
 <?php
 
 require("fonctionsBdd.php");
-session_start();
 $submit = filter_input(INPUT_POST, 'publier');
 $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -76,7 +75,7 @@ if ($submit == "Publier") {
 
                             }
                             else{
-                                $errorMessage[]="Le type de media n'est pas valide";
+                                $errorMessage[] = "Le type de media n'est pas valide";
                             }
                         } else {
                             $errorMessage[] = "L'image est trop grand";
@@ -96,7 +95,7 @@ if ($submit == "Publier") {
         } else {
             $errorMessage[] = "Ajouter une description";
         }
-       
+      $_REQUEST['error']=$errorMessage;
 
     } catch (Exception $e) {
         getConnexion()->rollBack();
