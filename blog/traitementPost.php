@@ -7,7 +7,7 @@
 <?php
 
 require("fonctionsBdd.php");
-
+session_start();
 $submit = filter_input(INPUT_POST, 'publier');
 $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -17,62 +17,90 @@ $maxFileSize = 3 * 1024 * 1024;
 $allFilesSize = 70 * 1024 * 1024;
 
 $imageType = array('jpg', 'png', 'jpeg', 'gif');
-$folder = "/var/www/html/M152/blog/uploads/";
+$folder = "./uploads/";
+$errorMessage = [];
 
-
-$error = "";
 
 if ($submit == "Publier") {
-    $idPost = newPost($description);
-    /* Filtrage du nom du fichier. */
-    $nameFiles = array_filter($_FILES['file']['name']);
+    getConnexion()->beginTransaction();
 
-    /* Il vérifie si le fichier est vide. */
-    if (!empty($nameFiles)) {
+    try {
+        /* Vérifier si la description est vide ou non. */
+        if (!empty($description)) {
 
-        /* Calcul de la taille totale de tous les fichiers. */
-        for ($i = 0; $i < count($_FILES['file']['name']); $i++) {
-            $file = $_FILES['file'];
-            $totalFilesSize += $file['size'][$i];
-        }
 
-        /* Vérifier si la taille totale de tous les fichiers est inférieure à la taille maximale */
-        if ($totalFilesSize <= $allFilesSize) {
+            $idPost = newPost($description);
+            /* Filtrage du nom du fichier. */
+            $nameFiles = array_filter($_FILES['file']['name']);
 
-            foreach ($nameFiles as $key => $val) {
-                $file = $_FILES['file'];
-                /* Vérifier si la taille du fichier est inférieure à la taille maximale du fichier. */
-                if ($file['size'][$key] <= $maxFileSize) {
+            /* Il vérifie si le fichier n'est vide. */
+            if (!empty($nameFiles)) {
 
-                    /* Obtenir le nom du fichier. */
-                    $nameFile = basename($nameFiles[$key]);
+                /* Calcul de la taille totale de tous les fichiers. */
+                for ($i = 0; $i < count($_FILES['file']['name']); $i++) {
+                    $file = $_FILES['file'];
+                    $totalFilesSize += $file['size'][$i];
+                }
 
-                    /* Obtenir l'extension du fichier. */
-                    $typeOfFile = pathinfo($nameFile, PATHINFO_EXTENSION);
+                /* Vérifier si la taille totale de tous les fichiers est inférieure à la taille maximale */
+                if ($totalFilesSize <= $allFilesSize) {
 
-                    if (in_array($typeOfFile, $imageType)) {
+                    foreach ($nameFiles as $key => $val) {
+                        $file = $_FILES['file'];
+                        /* Vérifier si la taille du fichier est inférieure à la taille maximale du fichier. */
+                        if ($file['size'][$key] <= $maxFileSize) {
 
-                        $fileName = pathinfo($nameFile);
+                            /* Obtenir le nom du fichier. */
+                            $nameFile = basename($nameFiles[$key]);
 
-                        $singleFileName = $fileName['filename'] . '_' . uniqid() . '.' . $fileName['extension'];
+                            /* Obtenir l'extension du fichier. */
+                            $typeOfFile = pathinfo($nameFile, PATHINFO_EXTENSION);
 
-                        $filePath = $folder . $singleFileName;
+                            if (in_array($typeOfFile, $imageType)) {
 
-                        /* Déplacer le fichier de l'emplacement temporaire vers le chemin du fichier. */
-                        if (move_uploaded_file($_FILES["file"]["tmp_name"][$key], $filePath)) {
-                            if (file_exists($filePath)) {
-                                newMedia($typeOfFile, $singleFileName, $idPost);
-                                header('Location: ./index.php');
+                                $fileName = pathinfo($nameFile);
+
+                                $singleFileName = $fileName['filename'] . '_' . uniqid() . '.' . $fileName['extension'];
+
+                                $filePath = $folder . $singleFileName;
+
+                                /* Déplacer le fichier de l'emplacement temporaire vers le chemin du fichier. */
+                                if (move_uploaded_file($_FILES["file"]["tmp_name"][$key], $filePath)) {
+                                    if (file_exists($filePath)) {
+                                        newMedia($_FILES["file"]["type"][$key], $singleFileName, $idPost);
+                                       
+
+                                    }
+
+                                }
+
                             }
+                            else{
+                                $errorMessage[]="Le type de media n'est pas valide";
+                            }
+                        } else {
+                            $errorMessage[] = "L'image est trop grand";
                         }
                     }
                 } else {
-                    echo "L'image est trop grand";
+                    $errorMessage[] = "Les images dépassent la limite de taille";
                 }
             }
+            if (count($errorMessage) != 0) {
+                getConnexion()->rollBack();
+            } else {
+                getConnexion()->commit();
+                header('Location:index.php');
+                exit;
+            }
+        } else {
+            $errorMessage[] = "Ajouter une description";
         }
+       
 
+    } catch (Exception $e) {
+        getConnexion()->rollBack();
+        throw $e;
     }
 }
-
 require "./post.php";

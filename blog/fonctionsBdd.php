@@ -38,25 +38,15 @@ function newMedia($typeMedia, $nameMedia, $idPost)
 {
     $today = date("Y-m-d H:i:s");
     $myDb = getConnexion();
-    $query = getConnexion()->prepare("
+    try {
+        $query = $myDb->prepare("
             INSERT INTO `media`(`typeMedia`, `nomMedia`, `creationDate`,`idPost`) 
             VALUES (?,?,?,?)
         ");
-    $query->execute([$typeMedia, $nameMedia, $today, $idPost]);
-    
-
-    // try {
-    //     $myDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    //     $myDb->beginTransaction();
-    //     $myDb->exec("INSERT INTO `media`(`typeMedia`, `nomMedia`, `creationDate`,`idPost`) VALUES ($typeMedia, $nameMedia, $today, $idPost)");
-    //     $myDb->commit();
-
-    // } catch (Exception $e) {
-    //     $myDb->rollBack();
-    //     echo "Failed: " . $e->getMessage();
-    // }
-
+        $query->execute([$typeMedia, $nameMedia, $today, $idPost]);
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    } 
 }
 
 
@@ -67,24 +57,16 @@ function newPost($comment)
 {
     $today = date("Y-m-d H:i:s");
     $myDb = getConnexion();
-
-    $query = $myDb->prepare("
+    try {
+        $query = $myDb->prepare("
             INSERT INTO `post`(`commentaire`, `creationDate`, `modificationDate`) 
             VALUES (?,?,?)
         ");
-    $query->execute([$comment, $today, $today]);
-    return $myDb->lastInsertId();
-    // try {
-    //     $myDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    //     $myDb->beginTransaction();
-    //     $myDb->exec(" INSERT INTO `post`(`commentaire`, `creationDate`, `modificationDate`) VALUES (?,?,?)");
-    //     $myDb->commit();
-        
-    // } catch (Exception $e) {
-    //     $myDb->rollBack();
-    //     echo "Failed: " . $e->getMessage();
-    // }
+        $query->execute([$comment, $today, $today]);
+        return $myDb->lastInsertId();
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
 }
 
 function displayPost()
@@ -121,6 +103,25 @@ function selectMedia($idPost)
         echo 'Exception reçue : ', $e->getMessage(), "\n";
     }
 }
+
+// function selectMediaPost($idPost)
+// {
+//     try {
+//         $query = getConnexion()->prepare("
+//         SELECT `commentaire`,`post`.`idPost`, `nomMedia` 
+//         FROM `post`,`media`
+//         WHERE `media`.`idPost`=`post`.`idPost` 
+//         AND `post`.`idPost` = ?
+//         ORDER BY `post`.`creationDate` DESC
+//         ");
+
+//         $query->execute([$idPost]);
+
+//         return $query->fetchAll(PDO::FETCH_ASSOC);
+//     } catch (PDOException $e) {
+//         echo 'Exception reçue : ', $e->getMessage(), "\n";
+//     }
+// }
 
 function countMedia($idPost)
 {

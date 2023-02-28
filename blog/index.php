@@ -29,7 +29,7 @@ $folder = "./uploads/";
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a href="#" class="navbar-brand">M152 - Blog</a>
+            <a href="index.php" class="navbar-brand">M152 - Blog</a>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse1">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -58,9 +58,10 @@ $folder = "./uploads/";
         <div class="row align-self-center">
             <div class="full col-sm-9">
                 <div class="row">
+                    <h1 class="text-center mt-3" id="msgBienvenue">Welcome</h1>
                     <!-- colonne gauche -->
                     <div class="col-sm-5">
-                        <div class="card mt-2">
+                        <div class="card mt-5">
                             <img src="https://a.travel-assets.com/findyours-php/viewfinder/images/res70/475000/475457-Los-Angeles.jpg"
                                 class="card-img-top img-responsive" alt="los angeles">
                             <div class="card-body">
@@ -88,23 +89,15 @@ $folder = "./uploads/";
                         </div>
                     </div>
                     <!-- colonne droite -->
-                    <div class="col-sm-7">
-                        <h1 class="text-center" id="msgBienvenue">Welcome</h1>
-
+                    <div class="col-sm-7 mt-5">
                         <!-- C'est une boucle qui affichera tous les post. -->
                         <?php foreach ($publish as $key => $value) {
                             /* Cette fonction compte le nombre de médias dans la base de données. */
                             $countMedia = countMedia($value['idPost']);
                             /* Cette fonction sélectionne tous les médias de la base de données. */
                             $selectMedia = selectMedia($value['idPost']);
-
-                            /* Si le nombre de médias est supérieur ou égal à 2. */
-                            if ($countMedia >= 2) { ?>
+                            if ($countMedia == 0) { ?>
                                 <div class="card mb-3" id="cardPublication">
-                                    <?php /* Boucle qui affichera tous les médias. */
-                                    foreach ($selectMedia as $media) { ?>
-                                        <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive">
-                                    <?php } ?>
                                     <div class="card-body">
                                         <h5 class="card-title">
                                             <?php echo $value["commentaire"] ?>
@@ -117,9 +110,7 @@ $folder = "./uploads/";
 
                                     </div>
                                 </div>
-                            <?php
-                                /* Il vérifie si le nombre de médias est égal à 1. */
-                            } else if ($countMedia = 1) {
+                            <?php } else if ($countMedia == 1) {
                                 ?>
                                     <div class="card mb-3" id="cardPublication">
                                         <img src="<?php echo $folder . $selectMedia[0]["nomMedia"] ?>"
@@ -136,7 +127,28 @@ $folder = "./uploads/";
 
                                         </div>
                                     </div>
-                            <?php }
+                            <?php } else /* Si le nombre de médias est supérieur ou égal à 2. */
+                                if ($countMedia >= 2) { ?>
+                                        <div class="card mb-3" id="cardPublication">
+                                        <?php /* Boucle qui affichera tous les médias. */
+                                        foreach ($selectMedia as $media) { ?>
+                                                <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive">
+                                        <?php } ?>
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                <?php echo $value["commentaire"] ?>
+                                                </h5>
+                                                <p>1,200 Followers, 83 Posts</p>
+                                                <div class="float-end">
+                                                    <i class="fa-regular fa-pen-to-square p-2"></i>
+                                                    <i class="fa-solid fa-trash p-2"></i>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                <?php
+                                    /* Il vérifie si le nombre de médias est égal à 1. */
+                                }
                         } ?>
                     </div>
                 </div>
