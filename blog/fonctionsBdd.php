@@ -69,6 +69,9 @@ function newPost($comment)
     }
 }
 
+/**
+ * Il obtient le commentaire et l'identifiant du message de la base de données et les classe par date de création
+ */
 function displayPost()
 {
     try {
@@ -86,6 +89,9 @@ function displayPost()
     }
 }
 
+/**
+ * Il sélectionne le nom et le type de média associé à une publication.
+ */
 function selectMedia($idPost)
 {
     try {
@@ -104,6 +110,9 @@ function selectMedia($idPost)
     }
 }
 
+/**
+ * Il compte le nombre de médias dans une publication.
+ */
 function countMedia($idPost)
 {
     try {

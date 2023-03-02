@@ -79,6 +79,7 @@ $errorMessage = "";
 
         <div>
             <?php
+            /* Affichage des erreurs. */
             if (isset($_REQUEST['error'])) {
                 $errorMessage = $_REQUEST['error'];
                 if ($errorMessage != 0) { ?>

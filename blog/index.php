@@ -115,12 +115,13 @@ $folder = "uploads/";
                                 ?>
                                 <div class="card mb-3" id="cardPublication">
                               <?php
+                                        /* Vérifie si le média est une vidéo, un son ou une image. */
                                         if ($selectMedia[0]['typeMedia'] == 'video/mp4') { ?>
-                                            <video class="img-responsive" autoplay loop>
+                                            <video class="w-100" autoplay loop>
                                                 <source src="<?= $folder . $selectMedia[0]['nomMedia'] ?>">
                                             </video>
                                         <?php } elseif ($selectMedia[0]['typeMedia'] == 'audio/mpeg') { ?>
-                                            <audio controls>
+                                            <audio class="w-100" controls>
                                                 <source src="<?= $folder . $selectMedia[0]['nomMedia'] ?>">
                                             </audio>
                                         <?php } else { ?>
@@ -143,18 +144,17 @@ $folder = "uploads/";
                                 <div class="card mb-3" id="cardPublication">
                                     <?php /* Boucle qui affichera tous les médias. */
                                     foreach ($selectMedia as $media) {
-
-                                        $tout=$folder.$media['nomMedia'];
+                                        /* Vérifie si le média est une vidéo, un son ou une image. */
                                         if ($media['typeMedia'] == 'video/mp4') { ?>
-                                            <video class="img-responsive" autoplay loop muted>
+                                            <video class="w-100 mb-3" autoplay loop muted>
                                                 <source src="<?= $folder . $media["nomMedia"] ?>">
                                             </video>
                                         <?php } elseif ($media['typeMedia'] == 'audio/mpeg') { ?>
-                                            <audio class="img-responsive" controls>
+                                            <audio class="w-100 mb-3" controls>
                                                 <source src="<?= $folder . $media["nomMedia"] ?>">
                                             </audio>
                                         <?php } else { ?>
-                                            <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive">
+                                            <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive mb-3">
                                         <?php }
                                     } ?>
                                     <div class="card-body">
@@ -170,26 +170,7 @@ $folder = "uploads/";
                                     </div>
                                 </div>
                             <?php
-                                /* Il vérifie si c'est un video. */
-                            } else { ?>
-                                <div class="card mb-3" id="cardPublication">
-                                    <video class="img-responsive"> autoplay loop>
-                                        <source src="<?php $folder . $selectMedia[0]["nomMedia"] ?>">
-                                    </video>
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            <?php echo $value["commentaire"] ?>
-                                        </h5>
-                                        <p>1,200 Followers, 83 Posts</p>
-                                        <div class="float-end">
-                                            <i class="fa-regular fa-pen-to-square p-2"></i>
-                                            <i class="fa-solid fa-trash p-2"></i>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            <?php }
-
+                            } 
                         } ?>
                     </div>
                 </div>
