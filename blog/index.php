@@ -7,7 +7,7 @@
 <?php
 require("./fonctionsBdd.php");
 $publish = displayPost();
-$folder = "./uploads/";
+$folder = "uploads/";
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -96,6 +96,7 @@ $folder = "./uploads/";
                             $countMedia = countMedia($value['idPost']);
                             /* Cette fonction sélectionne tous les médias de la base de données. */
                             $selectMedia = selectMedia($value['idPost']);
+                            
                             if ($countMedia == 0) { ?>
                                 <div class="card mb-3" id="cardPublication">
                                     <div class="card-body">
@@ -110,45 +111,63 @@ $folder = "./uploads/";
 
                                     </div>
                                 </div>
-                            <?php } else if ($countMedia == 1) {
+                            <?php } elseif ($countMedia == 1) {
                                 ?>
-                                    <div class="card mb-3" id="cardPublication">
-                                        <img src="<?php echo $folder . $selectMedia[0]["nomMedia"] ?>"
-                                            class="card-img-top img-responsive">
-                                        <div class="card-body">
-                                            <h5 class="card-title">
+                                <div class="card mb-3" id="cardPublication">
+                                    <img src="<?php echo $folder . $selectMedia[0]["nomMedia"] ?>"
+                                        class="card-img-top img-responsive">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
                                             <?php echo $value["commentaire"] ?>
-                                            </h5>
-                                            <p>1,200 Followers, 83 Posts</p>
-                                            <div class="float-end">
-                                                <i class="fa-regular fa-pen-to-square p-2"></i>
-                                                <i class="fa-solid fa-trash p-2"></i>
-                                            </div>
-
+                                        </h5>
+                                        <p>1,200 Followers, 83 Posts</p>
+                                        <div class="float-end">
+                                            <i class="fa-regular fa-pen-to-square p-2"></i>
+                                            <i class="fa-solid fa-trash p-2"></i>
                                         </div>
+
                                     </div>
-                            <?php } else /* Si le nombre de médias est supérieur ou égal à 2. */
-                                if ($countMedia >= 2) { ?>
-                                        <div class="card mb-3" id="cardPublication">
-                                        <?php /* Boucle qui affichera tous les médias. */
-                                        foreach ($selectMedia as $media) { ?>
-                                                <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive">
-                                        <?php } ?>
-                                            <div class="card-body">
-                                                <h5 class="card-title">
-                                                <?php echo $value["commentaire"] ?>
-                                                </h5>
-                                                <p>1,200 Followers, 83 Posts</p>
-                                                <div class="float-end">
-                                                    <i class="fa-regular fa-pen-to-square p-2"></i>
-                                                    <i class="fa-solid fa-trash p-2"></i>
-                                                </div>
-
-                                            </div>
+                                </div>
+                                <!-- Si le nombre de médias est supérieur ou égal à 2.  -->
+                            <?php } elseif ($countMedia >= 2) { ?>
+                                <div class="card mb-3" id="cardPublication">
+                                    <?php /* Boucle qui affichera tous les médias. */
+                                    foreach ($selectMedia as $media) { ?>
+                                        <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive">
+                                    <?php } ?>
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <?php echo $value["commentaire"] ?>
+                                        </h5>
+                                        <p>1,200 Followers, 83 Posts</p>
+                                        <div class="float-end">
+                                            <i class="fa-regular fa-pen-to-square p-2"></i>
+                                            <i class="fa-solid fa-trash p-2"></i>
                                         </div>
-                                <?php
-                                    /* Il vérifie si le nombre de médias est égal à 1. */
-                                }
+
+                                    </div>
+                                </div>
+                            <?php
+                                /* Il vérifie si c'est un video. */
+                            } elseif ($value['typeMedia'] == "video/mp4") { ?>
+                                <div class="card mb-3" id="cardPublication">
+                                    <video width="320" height="240" controls autoplay loop>
+                                        <source src="<?php $folder . $selectMedia[0]["nomMedia"] ?>" type="video/mp4">
+                                    </video>
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <?php echo $value["commentaire"] ?>
+                                        </h5>
+                                        <p>1,200 Followers, 83 Posts</p>
+                                        <div class="float-end">
+                                            <i class="fa-regular fa-pen-to-square p-2"></i>
+                                            <i class="fa-solid fa-trash p-2"></i>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            <?php }
+
                         } ?>
                     </div>
                 </div>

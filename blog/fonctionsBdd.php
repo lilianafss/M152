@@ -90,7 +90,7 @@ function selectMedia($idPost)
 {
     try {
         $query = getConnexion()->prepare("
-        SELECT `nomMedia` 
+        SELECT `nomMedia`, `typeMedia`
         FROM `media`,`post` 
         WHERE `media`.`idPost`=`post`.`idPost` 
         AND `post`.`idPost` = ? 
@@ -103,25 +103,6 @@ function selectMedia($idPost)
         echo 'Exception reçue : ', $e->getMessage(), "\n";
     }
 }
-
-// function selectMediaPost($idPost)
-// {
-//     try {
-//         $query = getConnexion()->prepare("
-//         SELECT `commentaire`,`post`.`idPost`, `nomMedia` 
-//         FROM `post`,`media`
-//         WHERE `media`.`idPost`=`post`.`idPost` 
-//         AND `post`.`idPost` = ?
-//         ORDER BY `post`.`creationDate` DESC
-//         ");
-
-//         $query->execute([$idPost]);
-
-//         return $query->fetchAll(PDO::FETCH_ASSOC);
-//     } catch (PDOException $e) {
-//         echo 'Exception reçue : ', $e->getMessage(), "\n";
-//     }
-// }
 
 function countMedia($idPost)
 {

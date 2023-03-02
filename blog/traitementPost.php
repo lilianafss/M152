@@ -15,7 +15,7 @@ $totalFilesSize = 0;
 $maxFileSize = 3 * 1024 * 1024;
 $allFilesSize = 70 * 1024 * 1024;
 
-$imageType = array('jpg', 'png', 'jpeg', 'gif');
+$imageType = array('jpg', 'png', 'jpeg', 'gif','mp4');
 $folder = "./uploads/";
 $errorMessage = [];
 
@@ -67,8 +67,6 @@ if ($submit == "Publier") {
                                 if (move_uploaded_file($_FILES["file"]["tmp_name"][$key], $filePath)) {
                                     if (file_exists($filePath)) {
                                         newMedia($_FILES["file"]["type"][$key], $singleFileName, $idPost);
-                                       
-
                                     }
 
                                 }
