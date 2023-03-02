@@ -96,7 +96,7 @@ $folder = "uploads/";
                             $countMedia = countMedia($value['idPost']);
                             /* Cette fonction sélectionne tous les médias de la base de données. */
                             $selectMedia = selectMedia($value['idPost']);
-                            
+
                             if ($countMedia == 0) { ?>
                                 <div class="card mb-3" id="cardPublication">
                                     <div class="card-body">
@@ -114,8 +114,18 @@ $folder = "uploads/";
                             <?php } elseif ($countMedia == 1) {
                                 ?>
                                 <div class="card mb-3" id="cardPublication">
-                                    <img src="<?php echo $folder . $selectMedia[0]["nomMedia"] ?>"
-                                        class="card-img-top img-responsive">
+                              <?php
+                                        if ($selectMedia[0]['typeMedia'] == 'video/mp4') { ?>
+                                            <video class="img-responsive" autoplay loop>
+                                                <source src="<?= $folder . $selectMedia[0]['nomMedia'] ?>">
+                                            </video>
+                                        <?php } elseif ($selectMedia[0]['typeMedia'] == 'audio/mpeg') { ?>
+                                            <audio controls>
+                                                <source src="<?= $folder . $selectMedia[0]['nomMedia'] ?>">
+                                            </audio>
+                                        <?php } else { ?>
+                                            <img src="<?php echo $folder . $selectMedia[0]['nomMedia'] ?>" class="card-img-top img-responsive">
+                                        <?php }?>
                                     <div class="card-body">
                                         <h5 class="card-title">
                                             <?php echo $value["commentaire"] ?>
@@ -132,9 +142,21 @@ $folder = "uploads/";
                             <?php } elseif ($countMedia >= 2) { ?>
                                 <div class="card mb-3" id="cardPublication">
                                     <?php /* Boucle qui affichera tous les médias. */
-                                    foreach ($selectMedia as $media) { ?>
-                                        <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive">
-                                    <?php } ?>
+                                    foreach ($selectMedia as $media) {
+
+                                        $tout=$folder.$media['nomMedia'];
+                                        if ($media['typeMedia'] == 'video/mp4') { ?>
+                                            <video class="img-responsive" autoplay loop muted>
+                                                <source src="<?= $folder . $media["nomMedia"] ?>">
+                                            </video>
+                                        <?php } elseif ($media['typeMedia'] == 'audio/mpeg') { ?>
+                                            <audio class="img-responsive" controls>
+                                                <source src="<?= $folder . $media["nomMedia"] ?>">
+                                            </audio>
+                                        <?php } else { ?>
+                                            <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive">
+                                        <?php }
+                                    } ?>
                                     <div class="card-body">
                                         <h5 class="card-title">
                                             <?php echo $value["commentaire"] ?>
@@ -149,10 +171,10 @@ $folder = "uploads/";
                                 </div>
                             <?php
                                 /* Il vérifie si c'est un video. */
-                            } elseif ($value['typeMedia'] == "video/mp4") { ?>
+                            } else { ?>
                                 <div class="card mb-3" id="cardPublication">
-                                    <video width="320" height="240" controls autoplay loop>
-                                        <source src="<?php $folder . $selectMedia[0]["nomMedia"] ?>" type="video/mp4">
+                                    <video class="img-responsive"> autoplay loop>
+                                        <source src="<?php $folder . $selectMedia[0]["nomMedia"] ?>">
                                     </video>
                                     <div class="card-body">
                                         <h5 class="card-title">

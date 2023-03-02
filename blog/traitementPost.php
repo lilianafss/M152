@@ -15,8 +15,8 @@ $totalFilesSize = 0;
 $maxFileSize = 3 * 1024 * 1024;
 $allFilesSize = 70 * 1024 * 1024;
 
-$imageType = array('jpg', 'png', 'jpeg', 'gif','mp4');
-$folder = "./uploads/";
+$imageType = array('jpg', 'png', 'jpeg', 'gif','mp4','mp3');
+$folder = "uploads/";
 $errorMessage = [];
 
 
@@ -76,11 +76,11 @@ if ($submit == "Publier") {
                                 $errorMessage[] = "Le type de media n'est pas valide";
                             }
                         } else {
-                            $errorMessage[] = "L'image est trop grand";
+                            $errorMessage[] = "Le media est trop grand";
                         }
                     }
                 } else {
-                    $errorMessage[] = "Les images dépassent la limite de taille";
+                    $errorMessage[] = "Les medias dépassent la limite de taille";
                 }
             }
             if (count($errorMessage) != 0) {

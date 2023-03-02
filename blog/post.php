@@ -67,7 +67,7 @@ $errorMessage = "";
                 <div class="form-outline w-75 mt-2 pt-1">
                     <label for="textAreaLabel" class="form-label">Sélectionner un ou plusieurs fichiers :</label>
                     <input type="file" class="form-control" name="file[]" id="file"
-                        accept="image/jpg, image/png, image/jpeg, image/gif,video/mp4" multiple>
+                        accept="image/jpg, image/png, image/jpeg, image/gif,video/mp4,audio/mp3" multiple>
                 </div>
                 <div class="d-grid col-6 w-75 mt-2 pt-1">
                     <input type="submit" value="Publier" name="publier" class="btn btn-primary p-2">
