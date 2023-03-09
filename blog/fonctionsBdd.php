@@ -46,7 +46,7 @@ function newMedia($typeMedia, $nameMedia, $idPost)
         $query->execute([$typeMedia, $nameMedia, $today, $idPost]);
     } catch (Exception $e) {
         echo "Failed: " . $e->getMessage();
-    } 
+    }
 }
 
 
@@ -125,6 +125,17 @@ function countMedia($idPost)
         $query->execute([$idPost]);
 
         return $query->fetch(PDO::FETCH_NUM)[0];
+    } catch (PDOException $e) {
+        echo 'Exception reçue : ', $e->getMessage(), "\n";
+    }
+}
+function deletePost($idPost)
+{
+    try {
+        $query = getConnexion()->prepare("
+        DELETE FROM `post` WHERE `idPost` = ?
+        ");
+        $query->execute([$idPost]);
     } catch (PDOException $e) {
         echo 'Exception reçue : ', $e->getMessage(), "\n";
     }

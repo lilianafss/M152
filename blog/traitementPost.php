@@ -84,6 +84,7 @@ if ($submit == "Publier") {
                 }
             }
             if (count($errorMessage) != 0) {
+                //gerer les fautes utilisateur
                 getConnexion()->rollBack();
             } else {
                 getConnexion()->commit();
@@ -96,6 +97,7 @@ if ($submit == "Publier") {
       $_REQUEST['error']=$errorMessage;
 
     } catch (Exception $e) {
+        //gerer les exception
         getConnexion()->rollBack();
         throw $e;
     }

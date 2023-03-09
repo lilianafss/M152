@@ -6,8 +6,27 @@
  -->
 <?php
 require("./fonctionsBdd.php");
+$suppresion = filter_input(INPUT_POST, 'supprimer');
+$idDuPost = filter_input(INPUT_POST, 'idDuPost');
+
 $publish = displayPost();
 $folder = "uploads/";
+
+
+if ($suppresion == "Supprimer") {
+    $nomMedia = selectMedia($idDuPost);
+    $unlinkError = false;
+    foreach ($nomMedia as $media) {
+        if (!unlink($folder . $media['nomMedia']))
+            $unlinkError = true;
+    }
+    if (!$unlinkError) {
+        deletePost($idDuPost);
+        header("refresh:0");
+        exit;
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -90,31 +109,21 @@ $folder = "uploads/";
                     </div>
                     <!-- colonne droite -->
                     <div class="col-sm-7 mt-5">
+
                         <!-- C'est une boucle qui affichera tous les post. -->
-                        <?php foreach ($publish as $key => $value) {
-                            /* Cette fonction compte le nombre de médias dans la base de données. */
-                            $countMedia = countMedia($value['idPost']);
-                            /* Cette fonction sélectionne tous les médias de la base de données. */
-                            $selectMedia = selectMedia($value['idPost']);
+                        <?php foreach ($publish as $key => $value) { ?>
+                            <div class="card mb-3" id="cardPublication">
+                                <form action="#" method="post">
+                                    <?php
+                                    /* Cette fonction compte le nombre de médias dans la base de données. */
+                                    $countMedia = countMedia($value['idPost']);
+                                    /* Cette fonction sélectionne tous les médias de la base de données. */
+                                    $selectMedia = selectMedia($value['idPost']);
 
-                            if ($countMedia == 0) { ?>
-                                <div class="card mb-3" id="cardPublication">
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            <?php echo $value["commentaire"] ?>
-                                        </h5>
-                                        <p>1,200 Followers, 83 Posts</p>
-                                        <div class="float-end">
-                                            <i class="fa-regular fa-pen-to-square p-2"></i>
-                                            <i class="fa-solid fa-trash p-2"></i>
-                                        </div>
+                                    if ($countMedia == 1) {
+                                        ?>
 
-                                    </div>
-                                </div>
-                            <?php } elseif ($countMedia == 1) {
-                                ?>
-                                <div class="card mb-3" id="cardPublication">
-                              <?php
+                                        <?php
                                         /* Vérifie si le média est une vidéo, un son ou une image. */
                                         if ($selectMedia[0]['typeMedia'] == 'video/mp4') { ?>
                                             <video class="w-100" autoplay loop>
@@ -125,37 +134,32 @@ $folder = "uploads/";
                                                 <source src="<?= $folder . $selectMedia[0]['nomMedia'] ?>">
                                             </audio>
                                         <?php } else { ?>
-                                            <img src="<?php echo $folder . $selectMedia[0]['nomMedia'] ?>" class="card-img-top img-responsive">
-                                        <?php }?>
-                                    <div class="card-body">
-                                        <h5 class="card-title">
-                                            <?php echo $value["commentaire"] ?>
-                                        </h5>
-                                        <p>1,200 Followers, 83 Posts</p>
-                                        <div class="float-end">
-                                            <i class="fa-regular fa-pen-to-square p-2"></i>
-                                            <i class="fa-solid fa-trash p-2"></i>
-                                        </div>
+                                            <img src="<?php echo $folder . $selectMedia[0]['nomMedia'] ?>"
+                                                class="card-img-top img-responsive">
+                                        <?php } ?>
 
-                                    </div>
-                                </div>
-                                <!-- Si le nombre de médias est supérieur ou égal à 2.  -->
-                            <?php } elseif ($countMedia >= 2) { ?>
-                                <div class="card mb-3" id="cardPublication">
-                                    <?php /* Boucle qui affichera tous les médias. */
-                                    foreach ($selectMedia as $media) {
-                                        /* Vérifie si le média est une vidéo, un son ou une image. */
-                                        if ($media['typeMedia'] == 'video/mp4') { ?>
-                                            <video class="w-100 mb-3" autoplay loop muted>
-                                                <source src="<?= $folder . $media["nomMedia"] ?>">
-                                            </video>
-                                        <?php } elseif ($media['typeMedia'] == 'audio/mpeg') { ?>
-                                            <audio class="w-100 mb-3" controls>
-                                                <source src="<?= $folder . $media["nomMedia"] ?>">
-                                            </audio>
-                                        <?php } else { ?>
-                                            <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive mb-3">
-                                        <?php }
+                                        <!-- Si le nombre de médias est supérieur ou égal à 2.  -->
+                                    <?php } elseif ($countMedia >= 2) { ?>
+                                       
+                                            <?php /* Boucle qui affichera tous les médias. */
+                                            foreach ($selectMedia as $media) {
+                                                /* Vérifie si le média est une vidéo, un son ou une image. */
+                                                if ($media['typeMedia'] == 'video/mp4') { ?>
+                                                    <video class="w-100 mb-3" autoplay loop muted>
+                                                        <source src="<?= $folder . $media["nomMedia"] ?>">
+                                                    </video>
+                                                <?php } elseif ($media['typeMedia'] == 'audio/mpeg') { ?>
+                                                    <audio class="w-100 mb-3" controls>
+                                                        <source src="<?= $folder . $media["nomMedia"] ?>">
+                                                    </audio>
+                                                <?php } else { ?>
+                                                    <img src="<?php echo $folder . $media["nomMedia"] ?>"
+                                                        class="card-img-top img-responsive mb-3">
+                                                <?php }
+                                            } ?>
+
+                                      
+                                        <?php
                                     } ?>
                                     <div class="card-body">
                                         <h5 class="card-title">
@@ -163,15 +167,17 @@ $folder = "uploads/";
                                         </h5>
                                         <p>1,200 Followers, 83 Posts</p>
                                         <div class="float-end">
-                                            <i class="fa-regular fa-pen-to-square p-2"></i>
-                                            <i class="fa-solid fa-trash p-2"></i>
+                                            <input type="submit" value="Editer" name="editer" class="btn btn-dark p-2">
+                                            <input type="submit" value="Supprimer" name="supprimer"
+                                                class="btn btn-dark p-2">
                                         </div>
 
                                     </div>
-                                </div>
-                            <?php
-                            } 
-                        } ?>
+                                    <input type="hidden" id="idDuPost" name="idDuPost" value="<?= $value['idPost'] ?>">
+                                </form>
+                            </div>
+                        <?php } ?>
+
                     </div>
                 </div>
             </div>
