@@ -9,7 +9,7 @@
 require_once "./constantes.php";
 
 /**
- * Il crée une connexion à une base de données MySQL 
+ * Créer une connexion à une base de données MySQL 
  */
 function getConnexion()
 {
@@ -32,7 +32,7 @@ function getConnexion()
 }
 
 /**
- * Il crée un nouveau média dans la base de données.
+ * Créer un nouveau média dans la base de données.
  */
 function newMedia($typeMedia, $nameMedia, $idPost)
 {
@@ -51,7 +51,7 @@ function newMedia($typeMedia, $nameMedia, $idPost)
 
 
 /**
- * Il insère un nouveau message dans la base de données et renvoie l'identifiant du nouveau message
+ * Insèrer un nouveau message dans la base de données et renvoie l'identifiant du nouveau message
  */
 function newPost($comment)
 {
@@ -70,7 +70,7 @@ function newPost($comment)
 }
 
 /**
- * Il obtient le commentaire et l'identifiant du message de la base de données et les classe par date de création
+ * Obtient le commentaire et l'identifiant du message de la base de données et les classe par date de création
  */
 function displayPost()
 {
@@ -89,14 +89,30 @@ function displayPost()
     }
 }
 
+function displayPostId($idPost)
+{
+    try {
+        $query = getConnexion()->prepare("
+        SELECT `commentaire`,`idPost` 
+        FROM `post`
+        WHERE `post`.`idPost` = ? 
+        ");
+
+        $query->execute([$idPost]);
+
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo 'Exception reçue : ', $e->getMessage(), "\n";
+    }
+}
 /**
- * Il sélectionne le nom et le type de média associé à une publication.
+ * Sélectionner le nom et le type de média associé à une publication.
  */
 function selectMedia($idPost)
 {
     try {
         $query = getConnexion()->prepare("
-        SELECT `nomMedia`, `typeMedia`
+        SELECT `idMedia`,`nomMedia`, `typeMedia`
         FROM `media`,`post` 
         WHERE `media`.`idPost`=`post`.`idPost` 
         AND `post`.`idPost` = ? 
@@ -111,7 +127,7 @@ function selectMedia($idPost)
 }
 
 /**
- * Il compte le nombre de médias dans une publication.
+ * Compter le nombre de médias dans une publication.
  */
 function countMedia($idPost)
 {
@@ -129,6 +145,10 @@ function countMedia($idPost)
         echo 'Exception reçue : ', $e->getMessage(), "\n";
     }
 }
+
+/**
+ * Supprimer un message de la base de données.
+ */
 function deletePost($idPost)
 {
     try {
@@ -140,3 +160,18 @@ function deletePost($idPost)
         echo 'Exception reçue : ', $e->getMessage(), "\n";
     }
 }
+
+function updatePost($commentaire, $idPost)
+{
+    try {
+        $query = getConnexion()->prepare("
+                UPDATE `post` 
+                SET `commentaire`= ?
+                WHERE `idPost` = ?
+            ");
+        $query->execute([$commentaire, $idPost]);
+    } catch (Exception $e) {
+        echo 'Exception reçue : ', $e->getMessage(), "\n";
+    }
+}
+

@@ -6,27 +6,32 @@
  -->
 <?php
 require("./fonctionsBdd.php");
+session_start();
 $suppresion = filter_input(INPUT_POST, 'supprimer');
+$edition = filter_input(INPUT_POST, 'editer');
 $idDuPost = filter_input(INPUT_POST, 'idDuPost');
-
 $publish = displayPost();
 $folder = "uploads/";
 
 
 if ($suppresion == "Supprimer") {
     $nomMedia = selectMedia($idDuPost);
-    $unlinkError = false;
+    $unlink = false;
     foreach ($nomMedia as $media) {
         if (!unlink($folder . $media['nomMedia']))
-            $unlinkError = true;
+            $unlink = true;
     }
-    if (!$unlinkError) {
+    if (!$unlink) {
         deletePost($idDuPost);
         header("refresh:0");
         exit;
     }
 }
 
+if ($edition == "Editer") {
+    $_SESSION['id'] = $idDuPost;
+    header("Location: edition.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -140,25 +145,25 @@ if ($suppresion == "Supprimer") {
 
                                         <!-- Si le nombre de médias est supérieur ou égal à 2.  -->
                                     <?php } elseif ($countMedia >= 2) { ?>
-                                       
-                                            <?php /* Boucle qui affichera tous les médias. */
-                                            foreach ($selectMedia as $media) {
-                                                /* Vérifie si le média est une vidéo, un son ou une image. */
-                                                if ($media['typeMedia'] == 'video/mp4') { ?>
-                                                    <video class="w-100 mb-3" autoplay loop muted>
-                                                        <source src="<?= $folder . $media["nomMedia"] ?>">
-                                                    </video>
-                                                <?php } elseif ($media['typeMedia'] == 'audio/mpeg') { ?>
-                                                    <audio class="w-100 mb-3" controls>
-                                                        <source src="<?= $folder . $media["nomMedia"] ?>">
-                                                    </audio>
-                                                <?php } else { ?>
-                                                    <img src="<?php echo $folder . $media["nomMedia"] ?>"
-                                                        class="card-img-top img-responsive mb-3">
-                                                <?php }
-                                            } ?>
 
-                                      
+                                        <?php /* Boucle qui affichera tous les médias. */
+                                        foreach ($selectMedia as $media) {
+                                            /* Vérifie si le média est une vidéo, un son ou une image. */
+                                            if ($media['typeMedia'] == 'video/mp4') { ?>
+                                                <video class="w-100 mb-3" autoplay loop muted>
+                                                    <source src="<?= $folder . $media["nomMedia"] ?>">
+                                                </video>
+                                            <?php } elseif ($media['typeMedia'] == 'audio/mpeg') { ?>
+                                                <audio class="w-100 mb-3" controls>
+                                                    <source src="<?= $folder . $media["nomMedia"] ?>">
+                                                </audio>
+                                            <?php } else { ?>
+                                                <img src="<?php echo $folder . $media["nomMedia"] ?>"
+                                                    class="card-img-top img-responsive mb-3">
+                                            <?php }
+                                        } ?>
+
+
                                         <?php
                                     } ?>
                                     <div class="card-body">
