@@ -1,16 +1,18 @@
 <!-- 
     Projet: Blog
     Auteur : Liliana Santos
-    Date: 26.01.2023
     Description : Page inicial du blog
  -->
 <?php
 require("./fonctionsBdd.php");
 session_start();
+
+/* Obtenir les valeurs du formulaire */
 $suppresion = filter_input(INPUT_POST, 'supprimer');
+$idDuPost = filter_input(INPUT_POST, 'idDuPost');
 $edition = filter_input(INPUT_POST, 'editer');
+
 $publish = displayPost();
-$folder = "uploads/";
 
 if ($edition == "Editer") {
     $_SESSION['id'] = $idDuPost;
@@ -99,7 +101,8 @@ if ($edition == "Editer") {
 
                         <!-- C'est une boucle qui affichera tous les post. -->
                         <?php foreach ($publish as $key => $value) { ?>
-                            <div id="supprimer<?=$value['idPost']?>" class="card mb-3" id="cardPublication">
+                            <?php $_SESSION['idDuPost'] = $value['idPost']; ?>
+                            <div id="supprimer<?= $_SESSION['idDuPost'] ?>" class="card mb-3" id="cardPublication">
                                 <form action="#" method="post">
                                     <?php
                                     /* Cette fonction compte le nombre de médias dans la base de données. */
@@ -114,14 +117,14 @@ if ($edition == "Editer") {
                                         /* Vérifie si le média est une vidéo, un son ou une image. */
                                         if ($selectMedia[0]['typeMedia'] == 'video/mp4') { ?>
                                             <video class="w-100" autoplay loop>
-                                                <source src="<?= $folder . $selectMedia[0]['nomMedia'] ?>">
+                                                <source src="<?= FOLDER . $selectMedia[0]['nomMedia'] ?>">
                                             </video>
                                         <?php } elseif ($selectMedia[0]['typeMedia'] == 'audio/mpeg') { ?>
                                             <audio class="w-100" controls>
-                                                <source src="<?= $folder . $selectMedia[0]['nomMedia'] ?>">
+                                                <source src="<?= FOLDER . $selectMedia[0]['nomMedia'] ?>">
                                             </audio>
                                         <?php } else { ?>
-                                            <img src="<?php echo $folder . $selectMedia[0]['nomMedia'] ?>" class="card-img-top img-responsive">
+                                            <img src="<?php echo FOLDER . $selectMedia[0]['nomMedia'] ?>" class="card-img-top img-responsive">
                                         <?php } ?>
 
                                         <!-- Si le nombre de médias est supérieur ou égal à 2.  -->
@@ -132,14 +135,14 @@ if ($edition == "Editer") {
                                             /* Vérifie si le média est une vidéo, un son ou une image. */
                                             if ($media['typeMedia'] == 'video/mp4') { ?>
                                                 <video class="w-100 mb-3" autoplay loop muted>
-                                                    <source src="<?= $folder . $media["nomMedia"] ?>">
+                                                    <source src="<?= FOLDER . $media["nomMedia"] ?>">
                                                 </video>
                                             <?php } elseif ($media['typeMedia'] == 'audio/mpeg') { ?>
                                                 <audio class="w-100 mb-3" controls>
-                                                    <source src="<?= $folder . $media["nomMedia"] ?>">
+                                                    <source src="<?= FOLDER . $media["nomMedia"] ?>">
                                                 </audio>
                                             <?php } else { ?>
-                                                <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive mb-3">
+                                                <img src="<?php echo FOLDER . $media["nomMedia"] ?>" class="card-img-top img-responsive mb-3">
                                         <?php }
                                         } ?>
 
@@ -154,11 +157,13 @@ if ($edition == "Editer") {
 
                                         <div class="float-end">
                                             <input type="submit" value="Editer" name="editer" class="btn btn-dark p-2">
+                                            <input type="hidden" id="idDuPost" name="idDuPost" value="<?= $value['idPost'] ?>">
                                         </div>
-                                      
+
                                     </div>
-                                    <?php $_SESSION['idDuPost'] = $value['idPost'];?>
+
                                 </form>
+                                <?= var_dump($_SESSION['idDuPost']) ?>
                                 <button type="submit" value="Supprimer" name="supprimer" id="supprimer" onclick="supprimerPost(<?= $_SESSION['idDuPost'] ?>)" class="btn btn-dark p-2"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         <?php } ?>

@@ -1,18 +1,25 @@
+<!-- 
+    Projet: Blog
+    Auteur : Liliana Santos
+    Description : Page de modification
+ -->
 <?php
 require("./fonctionsBdd.php");
 
 session_start();
 $id = $_SESSION['id'];
+
 //tailles fichiers
 $totalFilesSize = 0;
 $maxFileSize = 3 * 1024 * 1024;
 $allFilesSize = 70 * 1024 * 1024;
-
+//Images acceptes
 $imageType = array('jpg', 'png', 'jpeg', 'gif', 'mp4', 'mp3');
-$folder = "uploads/";
-$errorMessage = [];
 
+$errorMessage = [];
+//tableau pour les images cochées
 $imagesCoches = array();
+
 $posts = displayPostId($id);
 $medias = selectMedia($id);
 
@@ -20,83 +27,40 @@ $medias = selectMedia($id);
 $commentaire = filter_input(INPUT_POST, 'commentaire', FILTER_SANITIZE_SPECIAL_CHARS);
 $modification = filter_input(INPUT_POST, 'modifierPost');
 
-
-
 if (isset($modification)) {
     getConnexion()->beginTransaction();
 
     try {
+        /*Vérifie si le commentaire n'est pas vide et si ce n'est pas le cas, il met à jour le
+        message. */
         if (!empty($commentaire)) {
             updatePost($commentaire, $id);
         } else {
             $errorMessage[] = "Ajouter une description";
         }
 
+        /* Vérifie si l'utilisateur a sélectionné des images à supprimer. Si c'est le cas, il
+        stockera les images sélectionnées dans le tableau ``. */
         if (isset($imagesCoches)) {
             $imagesCoches = $_POST['selectedMedia'];
         }
 
         $unlink = false;
 
-        $nameFiles = array_filter($_FILES['file']['name']);
+        /* selection de l'image */
+        include("./ajoutImage.php");
 
-        /* Il vérifie si le fichier n'est vide. */
-        if (!empty($nameFiles)) {
-
-            /* Calcul de la taille totale de tous les fichiers. */
-            for ($i = 0; $i < count($_FILES['file']['name']); $i++) {
-                $file = $_FILES['file'];
-                $totalFilesSize += $file['size'][$i];
-            }
-
-            /* Vérifier si la taille totale de tous les fichiers est inférieure à la taille maximale */
-            if ($totalFilesSize <= $allFilesSize) {
-
-                foreach ($nameFiles as $key => $val) {
-                    $file = $_FILES['file'];
-                    /* Vérifier si la taille du fichier est inférieure à la taille maximale du fichier. */
-                    if ($file['size'][$key] <= $maxFileSize) {
-
-                        /* Obtenir le nom du fichier. */
-                        $nameFile = basename($nameFiles[$key]);
-
-                        /* Obtenir l'extension du fichier. */
-                        $typeOfFile = pathinfo($nameFile, PATHINFO_EXTENSION);
-
-                        if (in_array($typeOfFile, $imageType)) {
-
-                            $fileName = pathinfo($nameFile);
-
-                            $singleFileName = $fileName['filename'] . '_' . uniqid() . '.' . $fileName['extension'];
-
-                            $filePath = $folder . $singleFileName;
-
-                            /* Déplacer le fichier de l'emplacement temporaire vers le chemin du fichier. */
-                            if (move_uploaded_file($_FILES["file"]["tmp_name"][$key], $filePath)) {
-                                if (file_exists($filePath)) {
-                                    newMedia($_FILES["file"]["type"][$key], $singleFileName, $id);
-                                }
-                            }
-                        } else {
-                            $errorMessage[] = "Le type de media n'est pas valide";
-                        }
-                    } else {
-                        $errorMessage[] = "Le media est trop grand";
-                    }
-                }
-            } else {
-                $errorMessage[] = "Les medias dépassent la limite de taille";
-            }
-        }
         if (count($errorMessage) != 0) {
             //gerer les fautes utilisateur
             getConnexion()->rollBack();
         } else {
+           
             if (isset($imagesCoches)) {
 
+               /* Il s'agit de supprimer le média sélectionné par l'utilisateur. */
                 foreach ($imagesCoches as $media) {
 
-                    if (!unlink($folder . $media)) {
+                    if (!unlink(FOLDER . $media)) {
                         $unlink = true;
                     }
                     if (!$unlink) {
@@ -182,14 +146,14 @@ if (isset($modification)) {
                                 <label class="custom-control-label" for="media<?= $media['nomMedia'] ?>">
                                     <?php if ($media['typeMedia'] == 'video/mp4') { ?>
                                         <video class="w-100 mb-3" autoplay loop muted>
-                                            <source src="<?= $folder . $media["nomMedia"] ?>">
+                                            <source src="<?= FOLDER . $media["nomMedia"] ?>">
                                         </video>
                                     <?php } elseif ($media['typeMedia'] == 'audio/mpeg') { ?>
                                         <audio class="mb-3" controls>
-                                            <source src="<?= $folder . $media["nomMedia"] ?>">
+                                            <source src="<?= FOLDER . $media["nomMedia"] ?>">
                                         </audio>
                                     <?php } else { ?>
-                                        <img src="<?= $folder . $media['nomMedia'] ?>" class="card-img-top img-responsive mb-4">
+                                        <img src="<?= FOLDER . $media['nomMedia'] ?>" class="card-img-top img-responsive mb-4">
                                     <?php } ?>
                                 </label>
                             </div>
