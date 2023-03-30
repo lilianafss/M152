@@ -9,32 +9,8 @@ require("./fonctionsBdd.php");
 session_start();
 $suppresion = filter_input(INPUT_POST, 'supprimer');
 $edition = filter_input(INPUT_POST, 'editer');
-$idDuPost = filter_input(INPUT_POST, 'idDuPost');
 $publish = displayPost();
 $folder = "uploads/";
-
-
-if ($suppresion == "Supprimer") {
-    getConnexion()->beginTransaction();
-    try {
-        $nomMedia = selectMedia($idDuPost);
-        $unlink = false;
-        foreach ($nomMedia as $media) {
-            if (!unlink($folder . $media['nomMedia']))
-                $unlink = true;
-        }
-        if (!$unlink) {
-            deletePost($idDuPost);
-        }
-        getConnexion()->commit();
-        header("refresh:0");
-        exit;
-    } catch (Exception $e) {
-        //gerer les exception
-        getConnexion()->rollBack();
-        throw $e;
-    }
-}
 
 if ($edition == "Editer") {
     $_SESSION['id'] = $idDuPost;
@@ -53,6 +29,7 @@ if ($edition == "Editer") {
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/865258096d.js" crossorigin="anonymous"></script>
     <!-- css -->
+    <!-- <script src="./js/ajax.js"></script> -->
     <!-- <link rel="stylesheet" href="./assets/css/style.css"> -->
     <title>Home</title>
 </head>
@@ -122,7 +99,7 @@ if ($edition == "Editer") {
 
                         <!-- C'est une boucle qui affichera tous les post. -->
                         <?php foreach ($publish as $key => $value) { ?>
-                            <div class="card mb-3" id="cardPublication">
+                            <div id="supprimer<?=$value['idPost']?>" class="card mb-3" id="cardPublication">
                                 <form action="#" method="post">
                                     <?php
                                     /* Cette fonction compte le nombre de médias dans la base de données. */
@@ -174,14 +151,15 @@ if ($edition == "Editer") {
                                             <?php echo $value["commentaire"] ?>
                                         </h5>
                                         <p>1,200 Followers, 83 Posts</p>
+
                                         <div class="float-end">
                                             <input type="submit" value="Editer" name="editer" class="btn btn-dark p-2">
-                                            <input type="submit" value="Supprimer" name="supprimer" class="btn btn-dark p-2">
                                         </div>
-
+                                      
                                     </div>
-                                    <input type="hidden" id="idDuPost" name="idDuPost" value="<?= $value['idPost'] ?>">
+                                    <?php $_SESSION['idDuPost'] = $value['idPost'];?>
                                 </form>
+                                <button type="submit" value="Supprimer" name="supprimer" id="supprimer" onclick="supprimerPost(<?= $_SESSION['idDuPost'] ?>)" class="btn btn-dark p-2"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         <?php } ?>
 
@@ -190,6 +168,7 @@ if ($edition == "Editer") {
             </div>
         </div>
     </div>
+    <script src="./js/ajax.js"></script>
 </body>
 
 </html>
