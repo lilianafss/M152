@@ -15,16 +15,24 @@ $folder = "uploads/";
 
 
 if ($suppresion == "Supprimer") {
-    $nomMedia = selectMedia($idDuPost);
-    $unlink = false;
-    foreach ($nomMedia as $media) {
-        if (!unlink($folder . $media['nomMedia']))
-            $unlink = true;
-    }
-    if (!$unlink) {
-        deletePost($idDuPost);
+    getConnexion()->beginTransaction();
+    try {
+        $nomMedia = selectMedia($idDuPost);
+        $unlink = false;
+        foreach ($nomMedia as $media) {
+            if (!unlink($folder . $media['nomMedia']))
+                $unlink = true;
+        }
+        if (!$unlink) {
+            deletePost($idDuPost);
+        }
+        getConnexion()->commit();
         header("refresh:0");
         exit;
+    } catch (Exception $e) {
+        //gerer les exception
+        getConnexion()->rollBack();
+        throw $e;
     }
 }
 
@@ -41,8 +49,7 @@ if ($edition == "Editer") {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/865258096d.js" crossorigin="anonymous"></script>
     <!-- css -->
@@ -86,15 +93,13 @@ if ($edition == "Editer") {
                     <!-- colonne gauche -->
                     <div class="col-sm-5">
                         <div class="card mt-5">
-                            <img src="https://a.travel-assets.com/findyours-php/viewfinder/images/res70/475000/475457-Los-Angeles.jpg"
-                                class="card-img-top img-responsive" alt="los angeles">
+                            <img src="https://a.travel-assets.com/findyours-php/viewfinder/images/res70/475000/475457-Los-Angeles.jpg" class="card-img-top img-responsive" alt="los angeles">
                             <div class="card-body">
                                 <h5 class="card-title">Nom de votre blog</h5>
                                 <p>45 Followers, 13 Posts</p>
 
                                 <p>
-                                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" height="28px"
-                                        width="28px">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" height="28px" width="28px">
                                 </p>
                             </div>
                         </div>
@@ -126,7 +131,7 @@ if ($edition == "Editer") {
                                     $selectMedia = selectMedia($value['idPost']);
 
                                     if ($countMedia == 1) {
-                                        ?>
+                                    ?>
 
                                         <?php
                                         /* Vérifie si le média est une vidéo, un son ou une image. */
@@ -139,8 +144,7 @@ if ($edition == "Editer") {
                                                 <source src="<?= $folder . $selectMedia[0]['nomMedia'] ?>">
                                             </audio>
                                         <?php } else { ?>
-                                            <img src="<?php echo $folder . $selectMedia[0]['nomMedia'] ?>"
-                                                class="card-img-top img-responsive">
+                                            <img src="<?php echo $folder . $selectMedia[0]['nomMedia'] ?>" class="card-img-top img-responsive">
                                         <?php } ?>
 
                                         <!-- Si le nombre de médias est supérieur ou égal à 2.  -->
@@ -158,13 +162,12 @@ if ($edition == "Editer") {
                                                     <source src="<?= $folder . $media["nomMedia"] ?>">
                                                 </audio>
                                             <?php } else { ?>
-                                                <img src="<?php echo $folder . $media["nomMedia"] ?>"
-                                                    class="card-img-top img-responsive mb-3">
-                                            <?php }
+                                                <img src="<?php echo $folder . $media["nomMedia"] ?>" class="card-img-top img-responsive mb-3">
+                                        <?php }
                                         } ?>
 
 
-                                        <?php
+                                    <?php
                                     } ?>
                                     <div class="card-body">
                                         <h5 class="card-title">
@@ -173,8 +176,7 @@ if ($edition == "Editer") {
                                         <p>1,200 Followers, 83 Posts</p>
                                         <div class="float-end">
                                             <input type="submit" value="Editer" name="editer" class="btn btn-dark p-2">
-                                            <input type="submit" value="Supprimer" name="supprimer"
-                                                class="btn btn-dark p-2">
+                                            <input type="submit" value="Supprimer" name="supprimer" class="btn btn-dark p-2">
                                         </div>
 
                                     </div>

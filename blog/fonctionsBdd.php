@@ -161,6 +161,21 @@ function deletePost($idPost)
     }
 }
 
+function deleteMedia($nomMedia)
+{
+    try {
+        $query = getConnexion()->prepare("
+        DELETE FROM `media` WHERE `nomMedia` = '$nomMedia'
+        ");
+        $query->execute([]);
+    } catch (PDOException $e) {
+        echo 'Exception reçue : ', $e->getMessage(), "\n";
+    }
+}
+
+/**
+ * Il met à jour le commentaire d'un post dans la base de données.
+ */
 function updatePost($commentaire, $idPost)
 {
     try {
